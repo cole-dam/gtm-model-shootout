@@ -6,17 +6,28 @@ module.exports = (output, context) => {
   const vars = context.vars;
   let text = String(output || '');
 
-  // Local models sometimes "think out loud" or wrap JSON in code fences. Strip that.
+  // Local models sometimes think out loud or wrap JSON in code fences.
+  // Take the last JSON object, which is the final answer after that reasoning.
   text = text.replace(/<think>[\s\S]*?<\/think>/gi, '');
-  const match = text.match(/\{[\s\S]*\}/);
-  if (!match) {
+  text = text.replace(/```(?:json)?/gi, '');
+  const candidates = text.match(/\{[^{}]*\}/g);
+  if (!candidates) {
     return { pass: false, score: 0, reason: 'No JSON found in answer' };
   }
 
-  let parsed;
-  try {
-    parsed = JSON.parse(match[0]);
-  } catch (e) {
+  let parsed = null;
+  for (let i = candidates.length - 1; i >= 0; i--) {
+    try {
+      const obj = JSON.parse(candidates[i]);
+      if (obj && (Object.prototype.hasOwnProperty.call(obj, 'function') || Object.prototype.hasOwnProperty.call(obj, 'seniority'))) {
+        parsed = obj;
+        break;
+      }
+    } catch (e) {
+      // Keep looking. An earlier brace may be a scrap from the reasoning.
+    }
+  }
+  if (!parsed) {
     return { pass: false, score: 0, reason: 'Answer was not valid JSON' };
   }
 
