@@ -1,0 +1,84 @@
+# GTM Model Shootout — Task 1: job title normalization
+# Run with:  npx promptfoo@latest eval -o results/latest.json
+#
+# Paid models go through OpenRouter (OPENROUTER_API_KEY in .env).
+# Local Qwen stays on LM Studio. IDs checked against OpenRouter on 2026-10-10.
+
+description: 'GTM shootout: title normalization'
+
+prompts:
+  - file://prompts/title_normalization.txt
+
+providers:
+  # Can a free local model beat paid ones?
+  - id: openai:chat:qwen/qwen3.8-27b
+    label: 'Qwen 3.8 27B (local)'
+    config:
+      apiBaseUrl: http://localhost:1234/v1
+      apiKey: lm-studio
+      temperature: 0
+      max_tokens: 2048
+
+  # How much do you lose running the small local model instead of the big hosted sibling?
+  - id: openrouter:qwen/qwen3.8-max-0902
+    label: 'Qwen 3.8 Max (hosted)'
+    config:
+      temperature: 0
+      max_tokens: 2048
+      showThinking: false
+
+  # Cheap-and-fast incumbent.
+  - id: openrouter:anthropic/claude-haiku-5.5
+    label: 'Claude Haiku 5.5'
+    config:
+      temperature: 0
+      max_tokens: 2048
+      showThinking: false
+
+  # Quality bar.
+  - id: openrouter:anthropic/claude-sonnet-5.5
+    label: 'Claude Sonnet 5.5'
+    config:
+      temperature: 0
+      max_tokens: 2048
+      showThinking: false
+
+  # Google's speed/price play.
+  - id: openrouter:google/gemini-3.8-flash
+    label: 'Gemini 3.8 Flash'
+    config:
+      temperature: 0
+      max_tokens: 2048
+      showThinking: false
+
+  # Best open-weights contender.
+  - id: openrouter:z-ai/glm-5.3
+    label: 'GLM 5.3'
+    config:
+      temperature: 0
+      max_tokens: 2048
+      showThinking: false
+
+  # Trillion-parameter open model.
+  - id: openrouter:moonshotai/kimi-k3
+    label: 'Kimi K3'
+    config:
+      temperature: 0
+      max_tokens: 2048
+      showThinking: false
+
+  # Rock-bottom price floor. Dated snapshot, so the host can't silently swap the version.
+  - id: openrouter:deepseek/deepseek-v4-flash-0731
+    label: 'DeepSeek V4 Flash'
+    config:
+      temperature: 0
+      max_tokens: 2048
+      showThinking: false
+
+defaultTest:
+  assert:
+    - type: javascript
+      value: file://scripts/grade_title.js
+
+# Each row of the CSV becomes one test. Column names become {{variables}}.
+tests: file://data/titles.csv

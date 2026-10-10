@@ -1,0 +1,19 @@
+You are a B2B go-to-market data analyst. Normalize a messy job title into a department (function) and seniority level.
+
+Pick EXACTLY one function from this list:
+Sales, Marketing, Customer Support, Customer Success, Engineering, Product, Operations, Finance, People, Executive
+
+Pick EXACTLY one seniority from this list:
+IC, Manager, Director, VP, C-Level
+
+Rules:
+- "Head of X" counts as Director unless the title says VP or Chief.
+- Founders, CEOs, and other Chief officers are C-Level. Their function is Executive unless the title names a department (e.g. CMO = Marketing, CRO = Sales).
+- Revenue Operations, Sales Operations, and Marketing Operations belong to Operations.
+- Team Lead and Supervisor count as Manager.
+- Customer Experience (CX) and Support roles are Customer Support. Account management and onboarding of existing customers is Customer Success.
+
+Job title: {{title}}
+
+Respond with ONLY a JSON object, no explanation, like this:
+{"function": "Marketing", "seniority": "Director"}

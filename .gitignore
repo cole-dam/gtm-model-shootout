@@ -1,0 +1,17 @@
+# Secrets: never commit these
+.env
+.env.*
+!.env.example
+
+# Promptfoo's local cache and raw output (the scoreboard.md is fine to commit)
+.promptfoo/
+results/*.json
+
+# Model weights are huge; they live in LM Studio, never in git
+*.gguf
+*.safetensors
+
+# Mac and editor clutter
+.DS_Store
+node_modules/
+__pycache__/
