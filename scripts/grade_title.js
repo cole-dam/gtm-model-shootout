@@ -32,8 +32,11 @@ module.exports = (output, context) => {
   }
 
   const norm = (s) => String(s || '').trim().toLowerCase();
-  const fnOk = norm(parsed.function) === norm(vars.expected_function);
-  const senOk = norm(parsed.seniority) === norm(vars.expected_seniority);
+  // An answer-key cell can list several acceptable answers separated by "|".
+  const accepts = (answer, key) =>
+    String(key || '').split('|').map(norm).includes(norm(answer));
+  const fnOk = accepts(parsed.function, vars.expected_function);
+  const senOk = accepts(parsed.seniority, vars.expected_seniority);
   const score = (fnOk ? 0.5 : 0) + (senOk ? 0.5 : 0);
 
   const misses = [];
