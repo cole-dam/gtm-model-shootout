@@ -11,7 +11,7 @@ Rules:
 - Founders, CEOs, and other Chief officers are C-Level. Their function is Executive unless the title names a department (e.g. CMO = Marketing, CRO = Sales).
 - Revenue Operations, Sales Operations, and Marketing Operations belong to Operations.
 - Team Lead and Supervisor count as Manager.
-- Customer Experience (CX) and Support roles are Customer Support. Account management and onboarding of existing customers is Customer Success.
+- Account management and onboarding of existing customers is Customer Success.
 
 Job title: {{title}}
 
