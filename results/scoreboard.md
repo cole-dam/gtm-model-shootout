@@ -1,61 +1,48 @@
 # GTM Model Shootout: Title Normalization
-_Run on 2026-10-10 · 25 job titles_
+_Run on 2026-10-10 · 26 job titles_
 
 | Model | Got it fully right | Partial credit score | Avg speed | Cost for this run | Cost per 10k titles | Verdict |
 |---|---|---|---|---|---|---|
-| Claude Sonnet 5.5 | 24/25 (96%) | 98% | 2.1s | $0.0328 | $13.12 | ✅ Production-ready |
-| GLM 5.3 | 24/25 (96%) | 98% | 3.1s | $0.0165 | $6.60 | ✅ Production-ready |
-| Gemini 3.8 Flash | 24/25 (96%) | 98% | 3.1s | $0.0320 | $12.79 | ✅ Production-ready |
-| Kimi K3 | 24/25 (96%) | 98% | 2.2s | $0.0553 | $22.13 | ✅ Production-ready |
-| Qwen 3.8 Max (hosted) | 23/25 (92%) | 96% | 7.2s | $0.0445 | $17.79 | ✅ Production-ready |
-| DeepSeek V4 Flash | 23/25 (92%) | 96% | 2.2s | $0.0017 | $0.69 | ✅ Production-ready |
-| Qwen 3.8 27B (local) | 22/25 (88%) | 94% | 8.1s | Free (local) | Free (local) | 🟡 Good with spot checks |
-| Claude Haiku 5.5 | 22/25 (88%) | 94% | 1.5s | $0.0020 | $0.80 | 🟡 Good with spot checks |
+| Claude Sonnet 5.5 | 26/26 (100%) | 100% | 2.1s | $0.0356 | $13.69 | ✅ Production-ready |
+| Claude Haiku 5.5 | 26/26 (100%) | 100% | 1.5s | $0.0019 | $0.72 | ✅ Production-ready |
+| Qwen 3.8 Max (hosted) | 26/26 (100%) | 100% | 4.4s | $0.0352 | $13.55 | ✅ Production-ready |
+| GLM 5.3 | 26/26 (100%) | 100% | 1.7s | $0.0094 | $3.61 | ✅ Production-ready |
+| Gemini 3.8 Flash | 26/26 (100%) | 100% | 2.4s | $0.0296 | $11.38 | ✅ Production-ready |
+| DeepSeek V4 Flash | 26/26 (100%) | 100% | 1.3s | $0.0019 | $0.73 | ✅ Production-ready |
+| Kimi K3 | 26/26 (100%) | 100% | 2.4s | $0.0509 | $19.59 | ✅ Production-ready |
+| Qwen 3.8 27B (local) | 25/26 (96%) | 96% | 13.6s | Free (local) | Free (local) | ✅ Production-ready |
 
 ## Who served each answer
 
 OpenRouter can send the same model ID to different hosts. If one model shows several hosts, treat its score as a mix until you pin a host.
 
-- **Claude Sonnet 5.5**: Claude Platform on AWS (25) · reasoning tokens: 695
-- **GLM 5.3**: AkashML (1), Baidu (3), Decart (3), DigitalOcean (1), InferenceNet (1), Mistral (7), Parasail (1), PrimeIntellect (1), Sail Research (5), Wafer (2) · reasoning tokens: 3104
-- **Gemini 3.8 Flash**: Google (25) · reasoning tokens: 6941
-- **Kimi K3**: Decart (1), DigitalOcean (2), Fireworks (2), InferenceNet (5), Makora (5), Modal (4), Parasail (2), Relace (1), Wafer (3) · reasoning tokens: 2213
-- **Qwen 3.8 Max (hosted)**: Alibaba (25) · reasoning tokens: 4358
-- **DeepSeek V4 Flash**: Cohere (5), CoreWeave (7), DigitalOcean (5), OpenInference (4), Phala (1), Reka (1), StreamLake (1), Wafer (1) · reasoning tokens: 2446
-- **Qwen 3.8 27B (local)**: LM Studio (25) · reasoning tokens: 3115
-- **Claude Haiku 5.5**: Claude Platform on AWS (25) · reasoning tokens: 1400
+- **Claude Sonnet 5.5**: Claude Platform on AWS (26) · reasoning tokens: 485
+- **Claude Haiku 5.5**: Claude Platform on AWS (26) · reasoning tokens: 777
+- **Qwen 3.8 Max (hosted)**: Alibaba (26) · reasoning tokens: 2384
+- **GLM 5.3**: Inceptron (25), Wafer (1) · reasoning tokens: 2575
+- **Gemini 3.8 Flash**: Google (26) · reasoning tokens: 6058
+- **DeepSeek V4 Flash**: Cohere (26) · reasoning tokens: 1782
+- **Kimi K3**: Wafer (26) · reasoning tokens: 2594
+- **Qwen 3.8 27B (local)**: LM Studio (26) · reasoning tokens: 5048
 
 ## Where each model slipped
 
-**Claude Sonnet 5.5**: 1 misses
-- Lifecycle Marketing Manager → seniority: got "IC", wanted "Manager"
+**Claude Sonnet 5.5**: no misses 🎯
 
-**GLM 5.3**: 1 misses
-- Lifecycle Marketing Manager → seniority: got "IC", wanted "Manager"
+**Claude Haiku 5.5**: no misses 🎯
 
-**Gemini 3.8 Flash**: 1 misses
-- Lifecycle Marketing Manager → seniority: got "IC", wanted "Manager"
+**Qwen 3.8 Max (hosted)**: no misses 🎯
 
-**Kimi K3**: 1 misses
-- Lifecycle Marketing Manager → seniority: got "IC", wanted "Manager"
+**GLM 5.3**: no misses 🎯
 
-**Qwen 3.8 Max (hosted)**: 2 misses
-- Controller → seniority: got "Manager", wanted "Director"
-- Group Product Manager → seniority: got "IC", wanted "Manager"
+**Gemini 3.8 Flash**: no misses 🎯
 
-**DeepSeek V4 Flash**: 2 misses
-- Lifecycle Marketing Manager → seniority: got "IC", wanted "Manager"
-- Group Product Manager → seniority: got "IC", wanted "Manager"
+**DeepSeek V4 Flash**: no misses 🎯
 
-**Qwen 3.8 27B (local)**: 3 misses
-- Customer Success Manager → seniority: got "Manager", wanted "IC"
-- Controller → seniority: got "IC", wanted "Director"
-- Group Product Manager → seniority: got "IC", wanted "Manager"
+**Kimi K3**: no misses 🎯
 
-**Claude Haiku 5.5**: 3 misses
-- RevOps Manager → seniority: got "IC", wanted "Manager"
-- Lifecycle Marketing Manager → seniority: got "IC", wanted "Manager"
-- Controller → seniority: got "Manager", wanted "Director"
+**Qwen 3.8 27B (local)**: 1 misses
+- Controller → No JSON found in answer
 
 ## How to read this
 - **Got it fully right**: both department and seniority matched the answer key.

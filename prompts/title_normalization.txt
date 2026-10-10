@@ -11,7 +11,7 @@ Rules:
 - Founders, CEOs, and other Chief officers are C-Level. Their function is Executive unless the title names a department (e.g. CMO = Marketing, CRO = Sales).
 - Revenue Operations, Sales Operations, and Marketing Operations belong to Operations.
 - Team Lead and Supervisor count as Manager.
-- Seniority reflects whether someone manages people, not words in the title. For example, a Product Manager is an IC unless the title says they lead a team.
+- "Manager" means a people manager only when it names a team of people, like SDR Manager or Engineering Manager. When "Manager" names something the person owns, like an account, channel, product, campaign, or function, it is an IC title. Examples: Account Manager, Product Manager, and Campaign Manager are ICs.
 - Account management and onboarding of existing customers is Customer Success.
 
 Job title: {{title}}
