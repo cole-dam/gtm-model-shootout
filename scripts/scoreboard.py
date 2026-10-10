@@ -30,14 +30,67 @@ def verdict(accuracy):
     return "🔴 Not trustworthy yet"
 
 
-def serving_host(row):
-    """Best-effort name of the host that actually answered.
+def _host_name(value):
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return None
 
-    OpenRouter can route one model ID to different companies. Promptfoo stashes
-    the raw response in a few places depending on version, so check the likely ones.
+
+def _cache_host_index():
+    """Map each cached OpenRouter reply to the company that served it.
+
+    The chat completion body includes `provider` (for example "Google Vertex").
+    Promptfoo stores that body in its disk cache and copies only the bill into
+    the eval output, so the exported results do not contain the host.
+    """
+    path = Path.home() / ".promptfoo" / "cache" / "cache.json"
+    exact = {}
+    by_output = {}
+    if not path.exists():
+        return exact, by_output
+    try:
+        entries = json.loads(path.read_text()).get("cache") or []
+    except (OSError, json.JSONDecodeError):
+        return exact, by_output
+    for entry in entries:
+        if not isinstance(entry, list) or len(entry) < 2:
+            continue
+        payload = entry[1]
+        if not isinstance(payload, dict):
+            continue
+        try:
+            outer = json.loads(payload.get("value") or "")
+            inner = json.loads(outer.get("value") or "")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        body = inner.get("data") if isinstance(inner, dict) else None
+        if not isinstance(body, dict):
+            continue
+        host = _host_name(body.get("provider"))
+        model = body.get("model")
+        choices = body.get("choices") or []
+        message = choices[0].get("message") if choices and isinstance(choices[0], dict) else None
+        content = (message or {}).get("content") if isinstance(message, dict) else None
+        usage = body.get("usage") if isinstance(body.get("usage"), dict) else {}
+        if not host or not isinstance(model, str) or not isinstance(content, str):
+            continue
+        exact.setdefault(
+            (model, content, usage.get("prompt_tokens"), usage.get("completion_tokens")),
+            set(),
+        ).add(host)
+        by_output.setdefault((model, content), set()).add(host)
+    return exact, by_output
+
+
+def serving_host(row, cache_index=None):
+    """Name of the company that actually answered.
+
+    OpenRouter can route one model ID to different companies. Promptfoo keeps
+    the raw body in its cache; `provider` on that body is the serving host.
     """
     response = row.get("response") or {}
     meta = response.get("metadata") or {}
+    row_meta = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
     openrouter = meta.get("openrouter") if isinstance(meta, dict) else None
     raw = response.get("raw")
     candidates = []
@@ -45,14 +98,40 @@ def serving_host(row):
         candidates.extend([openrouter.get("provider"), openrouter.get("providerName")])
     if isinstance(meta, dict):
         candidates.append(meta.get("provider"))
+    if isinstance(row_meta, dict):
+        nested = row_meta.get("openrouter")
+        if isinstance(nested, dict):
+            candidates.extend([nested.get("provider"), nested.get("providerName")])
     if isinstance(raw, dict):
         candidates.append(raw.get("provider"))
         nested = raw.get("response")
         if isinstance(nested, dict):
             candidates.append(nested.get("provider"))
     for candidate in candidates:
-        if isinstance(candidate, str) and candidate.strip():
-            return candidate.strip()
+        name = _host_name(candidate)
+        if name:
+            return name
+
+    provider = row.get("provider") or {}
+    provider_id = provider.get("id") or ""
+    if isinstance(provider_id, str) and provider_id.startswith("openrouter:"):
+        model = provider_id.split(":", 1)[1]
+        output = response.get("output")
+        if not isinstance(output, str):
+            output = "" if output is None else str(output)
+        usage = row.get("tokenUsage") or response.get("tokenUsage") or {}
+        if not isinstance(usage, dict):
+            usage = {}
+        exact, by_output = cache_index if cache_index is not None else _cache_host_index()
+        hosts = exact.get((model, output, usage.get("prompt"), usage.get("completion")))
+        if not hosts:
+            hosts = by_output.get((model, output))
+        if hosts and len(hosts) == 1:
+            return next(iter(hosts))
+
+    label = provider.get("label") or ""
+    if isinstance(label, str) and "local" in label.lower():
+        return "LM Studio"
     return None
 
 
@@ -87,6 +166,7 @@ def main():
         "hosts": defaultdict(int),
         "misses": [],
     })
+    cache_index = _cache_host_index()
     for r in rows:
         provider = r.get("provider") or {}
         name = provider.get("label") or provider.get("id") or "unknown"
@@ -98,7 +178,7 @@ def main():
             s["latency"].append(r["latencyMs"])
         s["cost"] += float(r.get("cost") or 0)
         s["reasoning"] += reasoning_tokens(r)
-        host = serving_host(r)
+        host = serving_host(r, cache_index)
         if host:
             s["hosts"][host] += 1
         if not r.get("success"):
