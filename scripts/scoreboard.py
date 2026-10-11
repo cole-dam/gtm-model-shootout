@@ -1,7 +1,7 @@
 """Turn Promptfoo's raw results into a plain-English scoreboard.
 
 Usage:  python3 scripts/scoreboard.py results/latest.json
-Writes: results/scoreboard.md  (and prints it)
+Writes: results/scoreboard.md, or the path given as a second argument (and prints it)
 """
 
 import json
@@ -234,7 +234,9 @@ def main():
 
     out = "\n".join(lines)
     Path("results").mkdir(exist_ok=True)
-    Path("results/scoreboard.md").write_text(out + "\n")
+    out_path = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("results/scoreboard.md")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(out + "\n")
     print(out)
 
 

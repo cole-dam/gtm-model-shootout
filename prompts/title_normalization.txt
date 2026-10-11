@@ -8,11 +8,13 @@ IC, Manager, Director, VP, C-Level
 
 Rules:
 - "Head of X" counts as Director unless the title says VP or Chief.
-- Founders, CEOs, and other Chief officers are C-Level. Their function is Executive unless the title names a department (e.g. CMO = Marketing, CRO = Sales).
+- Anyone whose title includes Founder or CEO is Executive and C-Level, even if they also hold another title (e.g. Co-Founder & CMO = Executive).
+- Other Chief officers are C-Level and take the department they name (e.g. CMO = Marketing, CRO = Sales).
 - Revenue Operations, Sales Operations, and Marketing Operations belong to Operations.
 - Team Lead and Supervisor count as Manager.
 - "Manager" means a people manager only when it names a team of people, like SDR Manager or Engineering Manager. When "Manager" names something the person owns, like an account, channel, product, campaign, or function, it is an IC title. Examples: Account Manager, Product Manager, and Campaign Manager are ICs.
-- Account management and onboarding of existing customers is Customer Success.
+- When a title starts with "Manager," followed by a team or department, it is a people manager (e.g. "Manager, Sales Development").
+- Account Managers belong to Sales. Onboarding of existing customers is Customer Success.
 
 Job title: {{title}}
 

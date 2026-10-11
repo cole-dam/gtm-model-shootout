@@ -1,0 +1,26 @@
+title,expected_function,expected_seniority
+Senior Account Executive | Mid-Market,Sales,IC
+Director of Field Marketing,Marketing,Director
+VP Sales (we're hiring!),Sales,VP
+SWE II,Engineering,IC
+Senior Accountant,Finance,IC
+Recruiter,People,IC
+Content Marketing Manager,Marketing,IC
+Partner Marketing Manager,Marketing,IC
+Product Marketing Manager,Marketing,IC
+Senior Product Manager,Product,IC
+Sales Operations Manager,Operations,IC
+Key Account Manager,Sales,IC
+Senior Engineering Manager,Engineering,Manager
+AE Team Lead,Sales,Manager
+"Manager, Customer Success",Customer Success,Manager
+Head of RevOps @ Acme,Operations,Director
+"VP, Head of Customer Success",Customer Success,VP
+Chief Product Officer,Product,C-Level
+Chief People Officer,People,C-Level
+Founder & CTO,Executive,C-Level
+Customer Support Supervisor,Customer Support,Manager
+Sales Development Team Lead,Sales,Manager
+Marketing Operations Specialist,Operations,IC
+Customer Onboarding Manager,Customer Success,IC
+Director of Sales Operations,Operations,Director
