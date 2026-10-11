@@ -80,6 +80,21 @@ providers:
       max_tokens: 2048
       showThinking: false
 
+  # Jev (TypeSafe AI): a decision model, not a chat model. Custom provider in scripts/jev_provider.js.
+  # Baseline: just the title and bare option names.
+  - id: file://scripts/jev_provider.js
+    label: 'Jev (title only)'
+    config:
+      includeRules: false
+      model: jev-latest
+
+  # Same, but each answer option carries the prompt's rules in its description.
+  - id: file://scripts/jev_provider.js
+    label: 'Jev (with rules)'
+    config:
+      includeRules: true
+      model: jev-latest
+
 defaultTest:
   assert:
     - type: javascript
